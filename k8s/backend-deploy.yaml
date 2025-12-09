@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b
+  namespace: logging-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-b
+  template:
+    metadata:
+      labels:
+        app: service-b
+    spec:
+      containers:
+        - name: service-b
+          image: navabnaeem/usersdetails:be-v4  
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: biodb
+            - name: DB_USER
+              value: bio_user
+            - name: DB_PASSWORD
+              value: bio_pass
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  namespace: logging-test
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: service-b
+
